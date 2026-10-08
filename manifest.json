@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "Achadinhos do Dia",
+  "short_name": "Achadinhos",
+  "description": "Catálogo de produtos e ofertas selecionadas.",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#172554",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,47 @@
+ACHADINHOS DO DIA — VERSÃO INICIAL
+====================================
+
+O QUE JÁ FUNCIONA
+- Catálogo responsivo para celular e computador
+- Busca por nome/descrição
+- Filtro por categoria
+- Ordenação por nome
+- Botões de oferta e compartilhamento
+- Estrutura PWA (manifesto e service worker) para instalação quando hospedado em HTTPS
+- Aviso de transparência sobre links de afiliado
+
+IMPORTANTE
+Esta é uma versão inicial demonstrativa. Os produtos e preços são exemplos, e nenhum link de afiliado real foi incluído. O aplicativo não gera comissões até que você insira seus links válidos.
+
+COMO ADICIONAR PRODUTOS
+1. Abra o arquivo products.js em um editor de texto.
+2. Edite os objetos de PRODUCTS.
+3. Em affiliateUrl, cole o link de afiliado gerado na sua conta Shopee.
+4. Use preço real e descrição honesta, e confira as informações antes de publicar.
+5. Não remova o aviso de transparência sem substituir por uma declaração adequada.
+
+COMO TESTAR NO CELULAR
+- Para testar localmente, descompacte os arquivos e abra index.html no navegador, se o Android permitir.
+- Para a experiência PWA completa, publique os arquivos em um serviço de hospedagem estática com HTTPS.
+- Depois abra o endereço no Chrome para Android, menu ⋮, e escolha "Instalar app" ou "Adicionar à tela inicial", conforme aparecer.
+- O service worker e alguns recursos de instalação podem não funcionar ao abrir o arquivo diretamente (file://).
+
+PUBLICAÇÃO GRATUITA
+Você pode usar um serviço de hospedagem estática com plano gratuito. Verifique os termos, limites e os passos atuais do serviço escolhido antes de publicar. Ter uma PWA hospedada não é o mesmo que publicar um aplicativo na Google Play.
+
+AFILIADOS SHOPEE
+1. No aplicativo Shopee, entre em Eu > Criadores e Afiliados (os nomes podem variar).
+2. Faça a inscrição e aguarde aprovação.
+3. Gere o link de afiliado do produto dentro das ferramentas oficiais da Shopee.
+4. Cole o link em affiliateUrl no products.js.
+5. Teste cada botão antes de divulgar.
+
+SEM GARANTIA DE GANHOS
+Comissões dependem de compras qualificadas e das regras do programa. Não há garantia de renda.
+
+ESTRUTURA
+- index.html: interface e comportamento
+- products.js: lista de produtos
+- manifest.json: identidade da PWA
+- sw.js: cache básico
+- icon.svg: ícone do app

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <meta name="description" content="Achadinhos do Dia: ofertas selecionadas e produtos úteis.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>Achadinhos do Dia</title>
+  <style>
+    :root { --navy:#172554; --blue:#2563eb; --bg:#f8fafc; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; }
+    * { box-sizing:border-box }
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; color:var(--ink); background:var(--bg); }
+    header { background:var(--navy); color:white; padding:24px 16px 20px; }
+    .wrap { max-width:1000px; margin:auto; }
+    .brand { display:flex; align-items:center; gap:12px; }
+    .logo { display:grid; place-items:center; width:48px; height:48px; background:#ffffff20; border-radius:14px; font-size:26px; }
+    h1 { margin:0; font-size:clamp(22px,4vw,32px); }
+    header p { margin:5px 0 0; color:#dbeafe; }
+    .searchrow { display:flex; gap:8px; margin-top:18px; }
+    input, select { font:inherit; border:1px solid var(--line); border-radius:12px; padding:12px; background:white; min-width:0; }
+    input { flex:1; }
+    main { max-width:1000px; margin:auto; padding:20px 16px 36px; }
+    .intro { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+    h2 { margin:0 0 8px; font-size:21px; }
+    .muted { color:var(--muted); font-size:14px; }
+    .filters { display:flex; gap:8px; flex-wrap:wrap; margin:16px 0; }
+    .filter { border:1px solid var(--line); background:white; color:var(--ink); border-radius:999px; padding:9px 13px; cursor:pointer; }
+    .filter.active { background:var(--navy); color:white; border-color:var(--navy); }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    @media(min-width:650px) { .grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; } }
+    .card { background:white; border:1px solid var(--line); border-radius:18px; overflow:hidden; display:flex; flex-direction:column; }
+    .product-image { display:grid; place-items:center; min-height:112px; background:linear-gradient(135deg,#dbeafe,#eff6ff); font-size:48px; }
+    .cardbody { padding:13px; display:flex; flex-direction:column; gap:8px; flex:1; }
+    .category { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+    .product-name { margin:0; font-size:17px; }
+    .description { font-size:13px; color:var(--muted); line-height:1.4; }
+    .price { font-weight:700; font-size:14px; }
+    .btn { display:block; text-align:center; text-decoration:none; border:0; border-radius:11px; padding:11px 10px; background:var(--blue); color:white; font-weight:650; cursor:pointer; font:inherit; font-size:14px; }
+    .btn.secondary { background:#eff6ff; color:#1d4ed8; }
+    .note { margin-top:20px; padding:13px; background:#fff7ed; border:1px solid #fed7aa; color:#9a3412; border-radius:12px; font-size:13px; line-height:1.5; }
+    footer { text-align:center; color:var(--muted); padding:16px; font-size:12px; }
+    .empty { grid-column:1/-1; padding:28px; text-align:center; background:white; border-radius:16px; border:1px solid var(--line); }
+    .install { background:#fff; border:1px solid #ffffff60; color:var(--navy); border-radius:10px; padding:9px 12px; font-weight:650; cursor:pointer; display:none; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">🛍️</div>
+      <div style="flex:1">
+        <h1>Achadinhos do Dia</h1>
+        <p>Ofertas úteis, escolhas inteligentes.</p>
+      </div>
+      <button id="installBtn" class="install">Instalar app</button>
+    </div>
+    <div class="searchrow">
+      <input id="search" type="search" placeholder="Buscar produtos..." aria-label="Buscar produtos">
+      <select id="sort" aria-label="Ordenar produtos">
+        <option value="default">Destaques</option>
+        <option value="name">Nome A–Z</option>
+      </select>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="intro">
+    <div><h2>Encontre seu próximo achadinho</h2><div class="muted">Toque em “Ver oferta” para conferir o produto.</div></div>
+    <div class="muted" id="count"></div>
+  </div>
+  <nav class="filters" id="filters" aria-label="Categorias"></nav>
+  <section class="grid" id="products" aria-live="polite"></section>
+  <div class="note"><strong>Transparência:</strong> alguns links deste catálogo podem ser links de afiliado. Se você comprar por um link afiliado válido, o responsável pela divulgação poderá receber comissão, sem custo adicional para você. Os produtos de demonstração ainda precisam ser substituídos por produtos reais e links de afiliado aprovados.</div>
+</main>
+<footer>Achadinhos do Dia • Confira preço, frete, avaliações e condições na loja antes de comprar.</footer>
+<script src="products.js"></script>
+<script>
+const categories = ["Todos", ...new Set(PRODUCTS.map(p => p.category))];
+let activeCategory = "Todos";
+const filters = document.querySelector("#filters");
+const productRoot = document.querySelector("#products");
+const search = document.querySelector("#search");
+const sort = document.querySelector("#sort");
+function renderFilters() {
+  filters.innerHTML = "";
+  categories.forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "filter" + (activeCategory === cat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => { activeCategory = cat; renderFilters(); renderProducts(); };
+    filters.appendChild(b);
+  });
+}
+function renderProducts() {
+  let list = PRODUCTS.filter(p =>
+    (activeCategory === "Todos" || p.category === activeCategory) &&
+    (p.name + " " + p.description + " " + p.category).toLowerCase().includes(search.value.toLowerCase())
+  );
+  if (sort.value === "name") list.sort((a,b) => a.name.localeCompare(b.name, "pt-BR"));
+  document.querySelector("#count").textContent = list.length + (list.length === 1 ? " produto" : " produtos");
+  productRoot.innerHTML = "";
+  if (!list.length) {
+    productRoot.innerHTML = '<div class="empty">Nenhum produto encontrado. Tente outra busca.</div>';
+    return;
+  }
+  list.forEach(p => {
+    const card = document.createElement("article");
+    card.className = "card";
+    const image = document.createElement("div");
+    image.className = "product-image";
+    image.textContent = p.emoji || "🛍️";
+    const body = document.createElement("div");
+    body.className = "cardbody";
+    const cat = document.createElement("div"); cat.className = "category"; cat.textContent = p.category;
+    const title = document.createElement("h3"); title.className = "product-name"; title.textContent = p.name;
+    const desc = document.createElement("div"); desc.className = "description"; desc.textContent = p.description;
+    const price = document.createElement("div"); price.className = "price"; price.textContent = p.price || "Preço a consultar";
+    const link = document.createElement("a"); link.className = "btn"; link.textContent = "Ver oferta";
+    link.href = p.affiliateUrl || "#";
+    if (p.affiliateUrl && p.affiliateUrl.startsWith("https://")) {
+      link.target = "_blank"; link.rel = "noopener noreferrer sponsored";
+    } else {
+      link.href = "#";
+      link.onclick = (e) => { e.preventDefault(); alert("Este produto ainda é demonstrativo. Edite products.js e adicione seu link de afiliado Shopee aprovado."); };
+    }
+    const share = document.createElement("button"); share.className = "btn secondary"; share.textContent = "Compartilhar";
+    share.onclick = async () => {
+      const text = `${p.name} — ${p.description} ${p.affiliateUrl || ""}`.trim();
+      if (navigator.share) { try { await navigator.share({title:p.name, text, url:p.affiliateUrl || location.href}); } catch(e) {} }
+      else if (navigator.clipboard) { try { await navigator.clipboard.writeText(text); alert("Texto copiado!"); } catch(e) { alert(text); } }
+      else { alert(text); }
+    };
+    body.append(cat,title,desc,price,link,share);
+    card.append(image,body); productRoot.appendChild(card);
+  });
+}
+search.addEventListener("input", renderProducts);
+sort.addEventListener("change", renderProducts);
+renderFilters(); renderProducts();
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+}
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault(); deferredPrompt = e; document.querySelector("#installBtn").style.display = "inline-block";
+});
+document.querySelector("#installBtn").addEventListener("click", async () => {
+  if (!deferredPrompt) { alert("No Chrome do Android, abra o menu ⋮ e procure “Instalar app” ou “Adicionar à tela inicial”."); return; }
+  deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null;
+});
+</script>
+</body>
+</html>
