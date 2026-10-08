@@ -1,6 +1,11 @@
-// Edite esta lista para cadastrar seus produtos reais.
-// Substitua affiliateUrl pelo LINK DE AFILIADO gerado dentro da Shopee.
-// Não invente nem reutilize links comuns: use seu link de afiliado aprovado.
+{
+    name: "Carregador de celular",
+    category: "Eletrônicos",
+    emoji: "🔌",
+    description: "Confira esta oferta de carregador de celular na Shopee.",
+    price: "Preço a consultar",
+    affiliateUrl: "https://s.shopee.com.br/AUud0cjind"
+  },
 const PRODUCTS = [
   { name: "Fone Bluetooth", category: "Eletrônicos", emoji: "🎧", description: "Exemplo de produto para ouvir música e atender chamadas.", price: "Preço a consultar", affiliateUrl: "https://s.shopee.com.br/7KxbDcynXc" },
   { name: "Suporte para celular", category: "Acessórios", emoji: "📱", description: "Exemplo de acessório para vídeos e chamadas.", price: "Preço a consultar", affiliateUrl: "" },
